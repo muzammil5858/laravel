@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\QAController;
 use App\Http\Controllers\ProgramCordinatorController;
+use App\Http\Controllers\StudentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +24,8 @@ use App\Http\Controllers\ProgramCordinatorController;
 //     return $request->user();
 // });
 Route::post('login',[RegisterConroller::class,'login']);
+Route::get('students',[StudentController::class,'getStudentInfo']);
+
 Route::post('register',[RegisterConroller::class,'register']);
 Route::get('allstudents',[AdminController::class,'sindex']);
 Route::post('studentsave',[AdminController::class,'screate']);
