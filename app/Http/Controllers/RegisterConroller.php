@@ -16,17 +16,29 @@ class RegisterConroller extends Controller
         $email = $request->email;
         $password = $request->password;
 
-        $data = DB::select("SELECT * from users where email = '$email' and password = '$password'");
-        // // $some = json_encode($data);
-        if($data){
-            $data = $data[0]->Role; 
-            // $request->session()->put('id','this is me');
+        $data = DB::select("SELECT * from user where email = '$email' and password = '$password'");
+        
+        if($data != []){
+
+          
+            $data = $data[0]; 
+            $status = 200;
+            return response()->json([
+                'Array'=>$data,
+                'status' => $status,
+            ]);
         }
         else{
-            $data = 'user does not exists';
+            $message = 'user does not exists';
+            $status = 400;
+
+            return response()->json([
+                'Array'=>$message,
+                'status' => $status,
+            ]);
         }
 
-        return response()->json($data);
+        
     }
     function register(Request $request){
 
