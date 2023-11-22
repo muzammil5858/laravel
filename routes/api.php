@@ -24,6 +24,7 @@ use App\Http\Controllers\StudentController;
 //     return $request->user();
 // });
 Route::post('login',[RegisterConroller::class,'login']);
+Route::post('forgetpassword',[RegisterConroller::class,'forgetpassword']);
 Route::get('students',[StudentController::class,'getStudentInfo']);
 
 Route::post('register',[RegisterConroller::class,'register']);
