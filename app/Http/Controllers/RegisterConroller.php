@@ -11,8 +11,8 @@ use DB;
 
 class RegisterConroller extends Controller
 {
-     function login(Request $request){
-
+    public function login(Request $request){
+        
         $email = $request->email;
         $password = $request->password;
 
@@ -70,13 +70,17 @@ class RegisterConroller extends Controller
 
         $email = $request->email;
         $password = $request->password;
-        $user = $request->type;
+        $type = $request->type;
         $name = $request->name;
-        // $count = DB::select("SELECT * from users");
-        $record = DB::select("SELECT * from users where name = '$name' and email = '$email'");
+        // $count = DB::select("SELECT * from users"); 
+        $record = DB::select("SELECT * from project.user where name = '$name' and email = '$email'");
         // $record = $count;
         if($record){
-            $value = 'user Already Exist';
+            $value = 'User Already Exist';
+            return response()->json([
+                'message'=> $value,
+                'status' =>400
+            ]);
         }
         else{
 
@@ -86,12 +90,17 @@ class RegisterConroller extends Controller
             $data->name = $name;
             $data->email = $email;
             $data->password = $password;
-            $data->Role = $user;
+            $data->user_type = $type;
             $data->save();
             $value = 'SignUp Successfull';
+            return response()->json([
+                'message'=> $value,
+                 'user' => $data,
+                 'status' =>200
+            ]);
             // $value = $data;
         }
 
-        return response()->json($value);
+       
     }
 }
