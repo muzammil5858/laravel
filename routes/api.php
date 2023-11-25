@@ -76,6 +76,10 @@ Route::get('delstu/{id}',[ProgramCordinatorController::class,'delstu']);
 Route::post('addnew',[ProgramCordinatorController::class,'addnew']);
 
 Route::post('addreport',[ProgramCordinatorController::class,'addreport']);
+Route::post('addreport',[ProgramCordinatorController::class,'addreport']);
+
+Route::get('/verify-user',[RegisterConroller::class, 'verifyRegisterUser'])->name('user.verify');
+Route::post('/changepassword',[RegisterConroller::class, 'changePassword']);
 
 
 

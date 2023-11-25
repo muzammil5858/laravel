@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 use App\Models\User;
 use DB;
+use Mail;
 
 class RegisterConroller extends Controller
 {
@@ -16,7 +17,7 @@ class RegisterConroller extends Controller
         $email = $request->email;
         $password = $request->password;
 
-        $data = DB::select("SELECT * from user where email = '$email' and password = '$password'");
+        $data = DB::select("SELECT * from users where email = '$email' and password = '$password'");
 
         if($data != []){
 
@@ -44,15 +45,18 @@ class RegisterConroller extends Controller
     function forgetpassword(Request $request)
     {
         $email = $request->email;
-        $data = DB::select("SELECT * from users where email = '$email' ");
+        $data = DB::select("SELECT * from user where email = '$email' ");
         $CheckUserInSystem = User::where('email', $email)->count();
         if ($CheckUserInSystem == 1) {
-            $User = User::where('email', $email)->select('id','name','email','Role')->get();
+            $User = User::where('email', $email)->select('userid','name','email','user_type')->get();
             $data = $User;
             $status = 200;
+            $message = 'Email Verified!';
+            
             return response()->json([
                 'Array'=>$data,
-                'status' => $status,
+                'message'=>$message,
+                'status' => $status
             ]);
         }
         else {
@@ -73,7 +77,7 @@ class RegisterConroller extends Controller
         $type = $request->type;
         $name = $request->name;
         // $count = DB::select("SELECT * from users"); 
-        $record = DB::select("SELECT * from project.user where name = '$name' and email = '$email'");
+        $record = DB::select("SELECT * from user where name = '$name' and email = '$email'");
         // $record = $count;
         if($record){
             $value = 'User Already Exist';
@@ -92,6 +96,19 @@ class RegisterConroller extends Controller
             $data->password = $password;
             $data->user_type = $type;
             $data->save();
+         
+            // return response()->json($data->id);
+            $dataa = ['name'=>$name, 'id'=>$data->id];
+           
+            $email = $data->email;
+
+            // Mail::send('verify-email', $dataa, function($message)  use ($email) {
+            //     $message->to($email, 'User Email Verification')->subject
+            //         ('User Email Verification');
+            //     // $message->attach('C:\laravel-master\laravel\public\uploads\image.png');
+            //     // $message->attach('C:\laravel-master\laravel\public\uploads\test.txt');
+            //     $message->from('usamaumer109@gmail.com','Learniverse');
+            // });
             $value = 'SignUp Successfull';
             return response()->json([
                 'message'=> $value,
@@ -102,5 +119,35 @@ class RegisterConroller extends Controller
         }
 
        
+    }
+
+
+    public function verifyRegisterUser(Request $request){
+
+        
+        $id             = $request->id;
+        $UserDetail     = User::where('id', $id)->update([
+            'emailVerified'=>1,
+        ]);
+
+        return response()->json([
+            
+ 
+            'message' => 'User Account Verified Succesfully!',
+        ]);
+    }
+    public function changePassword(Request $request){
+
+        
+        $id             = $request->id;
+        $UserDetail     = User::where('id', $id)->update([
+            'password'=>$request->password,
+        ]);
+
+        return response()->json([
+            
+            'status' =>200,
+            'message' => 'Password Change Succesfully!',
+        ]);
     }
 }
